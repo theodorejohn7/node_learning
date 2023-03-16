@@ -1,10 +1,10 @@
-import express from 'express';
-import mongoose from 'mongoose';
-import bodyParser from 'body-parser';
-import userRoutes from './routes/userRoutes';
-import dotenv from 'dotenv';
-dotenv.config();
+import dotenv from "dotenv";
+import express from "express";
+import bodyParser from "body-parser";
+import { dbConnect } from "./utils/db";
+import userRoutes from "./routes/userRoutes";
 
+dotenv.config();
 
 class App {
   public app: express.Application;
@@ -19,30 +19,22 @@ class App {
   private config(): void {
     this.app.use(express.json());
     this.app.use(bodyParser.urlencoded({ extended: true }));
-   
   }
 
   private routes(): void {
-    this.app.use('/users', userRoutes);
+    this.app.use("/users", userRoutes);
   }
 
   private connectToDatabase(): void {
-    const dbUrl = process.env.MONGODB_URL || '' ;
-    // mongoose.connect(dbUrl, { useNewUrlParser: true, useUnifiedTopology: true });
-    console.log("@$#dbURL", dbUrl)
-    mongoose.connect(dbUrl);
-    const db = mongoose.connection;
-    const port =process.env.PORT_NO || 3777;
-    db.on('error', console.error.bind(console, 'MongoDB connection error:'));
-    db.once('open', () => {
-      console.log('Connected to MongoDB');
+  
+    dbConnect.connectDB();
+
+    const port = process.env.PORT_NO || 3777;
+    this.app.listen(port, () => {
+      console.log(`Server running on port ${port}`);
     });
-    this.app.listen(7000, () => {
-      console.log(`Server running on port ${7000}`);
-    });
+
   }
-
-
 }
 
 export default new App().app;
