@@ -1,4 +1,7 @@
 import mongoose from 'mongoose';
+import { Db } from 'mongodb';
+import User from '../models/user';
+import { UserDocument } from '../models/user';
 
 const userSchema = new mongoose.Schema({
     name: { type: String, required: true },
@@ -22,6 +25,11 @@ const userSchema = new mongoose.Schema({
         return users.map((user) => user.toObject());
       }
  
+
+      async findUserByEmailAndPassword(email: string, password: string): Promise<  UserDocument | null> {
+        const user = await UserModel.findOne({ email, password });
+        return user ? new User(user) : null;
+      }
 
 }
 export const userDao = new UserDao();

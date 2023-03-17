@@ -1,6 +1,7 @@
 import { Schema, model, Document } from 'mongoose';
 
 interface UserAttributes {
+ 
   name: string;
   email: string;
   password: string;
