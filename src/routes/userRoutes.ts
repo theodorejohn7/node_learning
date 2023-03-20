@@ -1,21 +1,36 @@
 import express, { Router, Request, Response } from 'express';
 import { UserController } from '../controllers/userController';
 
-const router: Router = express.Router();
+class UserRouter {
+  private router: Router;
+  private userController: UserController;
 
-const userController = new UserController();
+  constructor() {
+    this.router = express.Router();
+    this.userController = new UserController();
+    this.initializeRoutes();
+  }
 
-router.get('/', async (req: Request, res: Response) => {
-  const users = await userController.getAllUsers(req,res);
-  res.json(users);
-});
+  private initializeRoutes(): void {
+    this.router.get('/', this.getAllUsers.bind(this));
+    this.router.post('/', this.createUser.bind(this));
+  }
 
+  public async getAllUsers(req: Request, res: Response): Promise<void> {
+    const users = await this.userController.getAllUsers(req, res);
+    res.json(users);
+  }
 
-router.post('/', async (req: Request, res: Response) => {
-  console.log("@$#123 req",req.body)
-  const user = await userController.createUser(req, res);
-  res.json(user);
-});
+  public async createUser(req: Request, res: Response): Promise<void> {
+    console.log("@$#123 req",req.body)
+    const user = await this.userController.createUser(req, res);
+    res.json(user);
+  }
 
+  public getRouter(): Router {
+    return this.router;
+  }
+}
 
-export default router;
+export default UserRouter;
+ 
