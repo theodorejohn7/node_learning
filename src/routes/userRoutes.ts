@@ -12,8 +12,8 @@ class UserRouter {
   }
 
   private initializeRoutes(): void {
-    this.router.get('/', this.getAllUsers.bind(this));
-    this.router.post('/', this.createUser.bind(this));
+    this.router.get('/get-users', this.getAllUsers.bind(this));
+    this.router.post('/add-user', this.createUser.bind(this));
   }
 
   public async getAllUsers(req: Request, res: Response): Promise<void> {

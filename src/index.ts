@@ -1,8 +1,10 @@
 import dotenv from "dotenv";
 import express from "express";
 import bodyParser from "body-parser";
-import { dbConnect } from "./utils/db";
-import userRoutes from "./routes/userRoutes";
+import { dbConnect } from "./utils/db"; 
+import router from "./routes";
+import routes from "./routes";
+
 import UserRouter from "./routes/userRoutes"
 
 dotenv.config();
@@ -24,7 +26,9 @@ class App {
 
   private routes(): void {
     const userRouter = new UserRouter();
-    this.app.use("/users", userRouter.getRouter());
+ 
+    this.app.use(routes);
+
   }
 
   private connectToDatabase(): void {
