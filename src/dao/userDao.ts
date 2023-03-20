@@ -11,7 +11,7 @@ const userSchema = new mongoose.Schema({
     updatedAt: { type: Date, default: Date.now },
   });
 
-  const UserModel = mongoose.model('User', userSchema);
+  const UserModel = mongoose.model('UserModel', userSchema);
 
   class UserDao {
     
