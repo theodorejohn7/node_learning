@@ -1,5 +1,5 @@
-import express, { Router, Request, Response } from 'express';
-import { UserController } from '../controllers/userController';
+import express, { Router, Request, Response } from "express";
+import { UserController } from "../controllers/userController";
 
 class UserRouter {
   private router: Router;
@@ -12,8 +12,8 @@ class UserRouter {
   }
 
   private initializeRoutes(): void {
-    this.router.get('/get-users', this.getAllUsers.bind(this));
-    this.router.post('/add-user', this.createUser.bind(this));
+    this.router.get("/list-all", this.getAllUsers.bind(this));
+    this.router.post("/signup", this.createUser.bind(this));
   }
 
   public async getAllUsers(req: Request, res: Response): Promise<void> {
@@ -22,7 +22,6 @@ class UserRouter {
   }
 
   public async createUser(req: Request, res: Response): Promise<void> {
-    console.log("@$#123 req",req.body)
     const user = await this.userController.createUser(req, res);
     res.json(user);
   }
@@ -33,4 +32,3 @@ class UserRouter {
 }
 
 export default UserRouter;
- 
