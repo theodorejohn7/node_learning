@@ -1,23 +1,52 @@
 import express, { Router, Request, Response } from "express";
 import { ExpenseController } from "../controllers/expenseController";
-import { AuthService } from "../services/authService";
+import { AuthMiddleware } from "../middlewares/authMiddleware";
 
 export default class ExpenseRouter {
   private router: Router;
   private expenseController: ExpenseController;
+  private authMiddleware: AuthMiddleware;
 
   constructor() {
     this.router = express.Router();
     this.expenseController = new ExpenseController();
+    this.authMiddleware = new AuthMiddleware();
     this.initializeRoutes();
   }
 
   private initializeRoutes(): void {
-    this.router.post("/add", this.addExpense.bind(this));
-    this.router.get("/list", this.listExpense.bind(this));
-    this.router.get("/trends", this.getTrends.bind(this));
-    this.router.put("/update/:id", this.editExpense.bind(this));
-    this.router.delete("/delete/:id", this.deleteExpense.bind(this));
+    this.router.post(
+      "/add",
+      this.authMiddleware.authenticateToken,
+      this.authMiddleware.authorizeRole("admin"),
+      this.addExpense.bind(this)
+    );
+
+    this.router.get(
+      "/list",
+      this.authMiddleware.authenticateToken,
+      this.listExpense.bind(this)
+    );
+
+    this.router.get(
+      "/trends",
+      this.authMiddleware.authenticateToken,
+      this.getTrends.bind(this)
+    );
+
+    this.router.put(
+      "/update/:id",
+      this.authMiddleware.authenticateToken,
+      this.authMiddleware.authorizeRole("admin"),
+      this.editExpense.bind(this)
+    );
+
+    this.router.delete(
+      "/delete/:id",
+      this.authMiddleware.authenticateToken,
+      this.authMiddleware.authorizeRole("admin"),
+      this.deleteExpense.bind(this)
+    );
   }
 
   public async addExpense(req: Request, res: Response): Promise<void> {

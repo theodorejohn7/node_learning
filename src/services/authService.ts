@@ -18,19 +18,20 @@ export class AuthService {
   }
 
   static generateAccessToken(payload: any): string {
+    console.log("@$# ACCESTOKEN", payload);
     const accessToken = sign(
-      { userId: payload._id },
+      { userId: payload._id, role:payload.role},
       process.env.ACCESS_TOKEN_SECRET || this.secret,
-      { expiresIn: "15m" }
+      { expiresIn: process.env.ACCESS_TOKEN_EXPIRY || "15m" }
     );
     return accessToken;
   }
 
   static generateRefreshToken(payload: any): string {
     const refreshToken = sign(
-      { userId: payload._id },
+      { userId: payload._id, role:payload.role},
       process.env.REFRESH_TOKEN_SECRET || this.secret,
-      { expiresIn: "7d" }
+      { expiresIn: process.env.REFRESH_TOKEN_EXPIRY || "7d" }
     );
     return refreshToken;
   }
@@ -70,12 +71,11 @@ export class AuthService {
 
       await this.userDao.storeRefreshToken(isValidUser, refreshToken);
 
-      return { email,accessToken, refreshToken };
-    } catch (error) { 
+      return { email, accessToken, refreshToken };
+    } catch (error) {
       throw error;
     }
   }
-
 
   // async authenticateToken (req, res, next)
 }
