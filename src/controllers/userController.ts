@@ -3,6 +3,7 @@ import { userService } from "../services/userService";
 import { AuthService } from "../services/authService";
 import { UserDao } from "../dao/userDao";
 import UserModel from "../models/user";
+import Joi from "joi";
 
 export class UserController {
   private readonly userDao: UserDao;
@@ -14,9 +15,23 @@ export class UserController {
   }
 
   public async createUser(req: Request, res: Response) {
-    const user = req.body;
+    const userSchema = Joi.object({
+      name: Joi.string().required(),
+      email: Joi.string().email().required(),
+      password: Joi.string().required(),
+      securityQuestion: Joi.required(),
+      securityAnswer: Joi.required(),
+    });
+
+    const { error, value } = userSchema.validate(req.body);
+
+    if (error) {
+      return res.status(400).json({ message: error.details[0].message });
+    }
+    // const user = req.body;
+
     try {
-      const createdUser = await userService.createUser(user);
+      const createdUser = await userService.createUser(value);
       res.status(201).json(createdUser);
     } catch (error) {
       console.error(error);
