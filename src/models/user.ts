@@ -3,6 +3,7 @@ import bcrypt from "bcrypt";
 
 export interface UserAttributes {
   name: string;
+  role: string;
   email: string;
   password: string;
   refreshToken?: string;
@@ -16,6 +17,12 @@ const userSchema = new Schema<UserDocument>({
   name: {
     type: String,
     required: true,
+  },
+  role: {
+    type: String,
+    required: true,
+    default: "standard",
+    enum: ["standard", "admin"],
   },
   email: {
     type: String,

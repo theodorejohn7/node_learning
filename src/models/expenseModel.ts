@@ -11,7 +11,10 @@ export interface ExpenseAttributes {
   imagePath?: string;
 }
 
-export interface ExpenseDocument extends ExpenseAttributes, Document {}
+export interface ExpenseDocument extends ExpenseAttributes, Document {
+
+  
+}
 
 const expenseSchema = new Schema<ExpenseDocument>({
   description: {

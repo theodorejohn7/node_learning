@@ -19,11 +19,71 @@ export class ExpenseController {
       const data = req.body;
       const newExpense = await this.expenseService.createExpense(data);
       res.status(201).json(newExpense);
-
     } catch (error: any) {
       res
         .status(500)
         .json({ message: `Failed to add expense  ${error.message}` });
+    }
+  }
+
+  public async getAllExpenses(req: Request, res: Response) {
+    try {
+      const allExpenses = await this.expenseService.getAllExpenses();
+      res.status(201).json(allExpenses);
+    } catch (error: any) {
+      res.status(500).json({ message: "Failedto get all expenses" });
+    }
+  }
+
+  public async editExpense(req: Request, res: Response): Promise<void> {
+    const { id } = req.params;
+    const {
+      description,
+      amount,
+      category,
+      date,
+      paymentMethod,
+      merchant,
+      location,
+      imagePath
+    } = req.body;
+
+    try {
+      const expenseUpdate: {
+        description: string;
+        amount: number;
+        category: string;
+        date: Date;
+        paymentMethod: string;
+        merchant: string;
+        location: string;
+        imagePath: string;
+      } = {
+        description,
+        amount,
+        category,
+        date,
+        paymentMethod,
+        merchant,
+        location,
+        imagePath,
+      };
+
+      const updatedExpense = await this.expenseService.editExpense(
+        id,
+        description,
+        amount,
+        category,
+        date,
+        paymentMethod,
+        merchant,
+        location,
+        imagePath
+      );
+      res.status(200).json(updatedExpense);
+    } catch (error: any) {
+      console.error(error);
+      res.status(500).json({ message: "Failed to update expense" });
     }
   }
 }

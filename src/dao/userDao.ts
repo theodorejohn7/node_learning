@@ -2,7 +2,9 @@ import mongoose from "mongoose";
 import { UserDocument } from "../models/user";
 import UserModel from "../models/user";
 import User from "../models/user";
+
 export class UserDao {
+
   private userModel = UserModel;
   constructor(userModel: typeof User) {
     this.userModel = userModel;
@@ -75,6 +77,8 @@ export class UserDao {
       throw new Error("Error Deleting User");
     }
   }
+
+  
 }
 
 export const userDao = new UserDao(UserModel);

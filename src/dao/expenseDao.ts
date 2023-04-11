@@ -1,7 +1,13 @@
-import ExpenseModel from "../models/expenseModel";
+import ExpenseModel, { ExpenseDocument } from "../models/expenseModel";
+import { Model } from "mongoose";
 
 export class ExpenseDao {
-  constructor() {}
+  //   private readonly expenseModel = ExpenseModel;
+  private expenseModel: Model<ExpenseDocument>;
+
+  constructor(expenseModel: typeof ExpenseModel) {
+    this.expenseModel = expenseModel;
+  }
 
   async createExpense(expense: any): Promise<any> {
     try {
@@ -27,8 +33,34 @@ export class ExpenseDao {
 
       const addedExpense = await ExpenseModel.create(expense);
       return addedExpense.toObject();
-    } catch (error: any) { 
+    } catch (error: any) {
       throw new Error(error.message);
+    }
+  }
+
+  async getAllExpenses(): Promise<any[]> {
+    try {
+      const expenses = await ExpenseModel.find().exec();
+      return expenses.map((expense) => expense.toObject());
+    } catch (error: any) {
+      throw new Error(error.message);
+    }
+  }
+
+  public async editExpense(
+    id: string,
+    expenseData: Partial<ExpenseDocument>
+  ): Promise<ExpenseDocument | null> {
+    try {
+      const expense = await this.expenseModel.findByIdAndUpdate(
+        id,
+        expenseData,
+        { new: true }
+      );
+      return expense;
+    } catch (error) {
+      console.error(error);
+      return null;
     }
   }
 }

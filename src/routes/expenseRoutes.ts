@@ -1,5 +1,6 @@
 import express, { Router, Request, Response } from "express";
 import { ExpenseController } from "../controllers/expenseController";
+import { AuthService } from "../services/authService";
 
 export default class ExpenseRouter {
   private router: Router;
@@ -20,10 +21,7 @@ export default class ExpenseRouter {
   }
 
   public async addExpense(req: Request, res: Response): Promise<void> {
-    // POST /expenses: Adds a new expense for any user
-
     const newExpense = await this.expenseController.addExpense(req, res);
-    console.log("@$# expenseRoutes", newExpense);
     res.json(newExpense);
   }
 
@@ -32,6 +30,8 @@ export default class ExpenseRouter {
     //?id=id return only for the id
     //?start_date=...&end_date=... return on date range
     console.log("@$# listExpense", req.body, "params", req.query);
+    const allExpenses = await this.expenseController.getAllExpenses(req, res);
+    res.json(allExpenses);
   }
 
   public async getTrends(req: Request, res: Response): Promise<void> {
@@ -41,7 +41,10 @@ export default class ExpenseRouter {
 
   public async editExpense(req: Request, res: Response): Promise<void> {
     // PUT /expenses/:id: Updates a specific expense by ID for any user
-    console.log("@$# editExpense", req.body, "params", req.params);
+    // console.log("@$# editExpense", req.body, "params", req.params);
+
+    const updateExpense = await this.expenseController.editExpense(req, res);
+    res.json(updateExpense);
   }
 
   public async deleteExpense(req: Request, res: Response): Promise<void> {
