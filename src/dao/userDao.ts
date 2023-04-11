@@ -13,11 +13,6 @@ export class UserDao {
     return createdUser.toObject();
   }
 
-  async getAllUsers(): Promise<any[]> {
-    const users = await UserModel.find().exec();
-    return users.map((user) => user.toObject());
-  }
-
   async findUserByEmail(email: string): Promise<UserDocument | null> {
     const user = await UserModel.findOne({ email });
     return user ? user.toObject() : null;
@@ -40,6 +35,44 @@ export class UserDao {
     } catch (error) {
       console.error("Error storing refresh token:", error);
       throw new Error("Error storing refresh token");
+    }
+  }
+
+  async getAllUsers(): Promise<any[]> {
+    const users = await UserModel.find().exec();
+    return users.map((user) => user.toObject());
+  }
+
+  async resetPassword(userDetails: {
+    email: string;
+    newPassword: string;
+    securityQuestion: string;
+    securityAnswer: string;
+  }): Promise<any> {
+    const { email, newPassword, securityQuestion, securityAnswer } =
+      userDetails;
+    const user = await User.findOne({
+      email,
+      securityQuestion,
+      securityAnswer,
+    });
+    if (!user) {
+      throw new Error("Invalid email, security question, or security answer.");
+    }
+    user.password = newPassword;
+    await user.save();
+
+    return { message: "Password reset successfully." };
+  }
+
+  async deleteUser(email: string): Promise<any> {
+    try {
+      const deletedUser = await User.findOneAndDelete({ email: email });
+      if (deletedUser) {
+        return { message: `${deletedUser.email} User deleted Successfully ` };
+      }
+    } catch (error) {
+      throw new Error("Error Deleting User");
     }
   }
 }
