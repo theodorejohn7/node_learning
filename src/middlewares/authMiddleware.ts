@@ -10,7 +10,7 @@ interface TokenPayload {
 
 interface Request extends ExpressRequest {
   userId?: string;
-}
+} 
 
 export class AuthMiddleware {
   private readonly secret = "mY-$eCrEt";
@@ -42,14 +42,13 @@ export class AuthMiddleware {
       process.env.ACCESS_TOKEN_SECRET || this.secret,
       (err, decoded) => {
         if (err) {
-          console.log("@$# decoded", decoded);
           //   const { exp } = decoded as TokenPayload;
           //   if (exp && Date.now() >= exp * 1000) {
           // return res.status(401).json({ error: "Token expired" });
           //   } else {
           return res
             .status(401)
-            .json({ error: `Token invalid - ${err.message}`  });
+            .json({ error: `Token invalid - ${err.message}` });
           //   }
 
           // console.log("@$# req.userId", req.userId);
@@ -68,7 +67,6 @@ export class AuthMiddleware {
   }
 
   public authorizeRole(role: string) {
-    console.log("@$# authorize role")
     return (req: Request, res: Response, next: NextFunction) => {
       const authHeader = req.headers.authorization;
 
@@ -94,17 +92,18 @@ export class AuthMiddleware {
         process.env.ACCESS_TOKEN_SECRET || this.secret,
         (err, decoded) => {
           if (err) {
-            return res.status(401).json({ error: "Token invalid", msg:err });
+            return res.status(401).json({ error: "Token invalid", msg: err });
           }
 
-          const { role: userRole } = decoded as TokenPayload;
-          console.log("@$# role", role, userRole, decoded)
+          const { role: userRole, userId } = decoded as TokenPayload;
+          console.log("@$# role", role, userRole,userId,  decoded);
 
           if (userRole !== role) {
             return res.status(403).json({ error: "Forbidden" });
           }
+          req.userId = (decoded as TokenPayload).userId;
 
-          return next();
+          return next( );
         }
       );
     };

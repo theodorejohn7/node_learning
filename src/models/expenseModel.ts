@@ -1,4 +1,5 @@
-import { Schema, model, Document } from "mongoose";
+import { Schema, model, Document, Types } from "mongoose";
+const { ObjectId } = Types;
 
 export interface ExpenseAttributes {
   description: string;
@@ -9,12 +10,10 @@ export interface ExpenseAttributes {
   merchant?: string;
   location?: string;
   imagePath?: string;
+  user: typeof ObjectId;
 }
 
-export interface ExpenseDocument extends ExpenseAttributes, Document {
-
-  
-}
+export interface ExpenseDocument extends ExpenseAttributes, Document {}
 
 const expenseSchema = new Schema<ExpenseDocument>({
   description: {
@@ -44,6 +43,11 @@ const expenseSchema = new Schema<ExpenseDocument>({
   location: {
     type: String,
     default: undefined,
+  },
+  user: {
+    type:  ObjectId,
+    ref: "User",
+    required: true,
   },
 });
 

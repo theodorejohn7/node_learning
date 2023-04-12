@@ -5,6 +5,16 @@ import ExpenseService from "../services/expenseService";
 import { UserDao } from "../dao/userDao";
 import UserModel from "../models/user";
 
+export interface AuthRequest extends Request {
+  user: {
+    id: string;
+  };
+}
+
+interface CustomRequest extends Request {
+  userId: string;
+}
+
 export class ExpenseController {
   private readonly userDao: UserDao;
   private readonly expenseService: ExpenseService;
@@ -14,10 +24,13 @@ export class ExpenseController {
     this.expenseService = new ExpenseService();
   }
 
-  public async addExpense(req: Request, res: Response) {
+  public async addExpense(req: CustomRequest, res: Response,  ) {
     try {
+      console.log("@$# inside ADD EXPENSE", req.userId);
       const data = req.body;
-      const newExpense = await this.expenseService.createExpense(data);
+      // const userId = (req as AuthRequest).user.id;
+     const user = req.userId;
+      const newExpense = await this.expenseService.createExpense({...data, user});
       res.status(201).json(newExpense);
     } catch (error: any) {
       res
@@ -45,7 +58,7 @@ export class ExpenseController {
       paymentMethod,
       merchant,
       location,
-      imagePath
+      imagePath,
     } = req.body;
 
     try {

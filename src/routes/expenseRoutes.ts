@@ -2,6 +2,7 @@ import express, { Router, Request, Response } from "express";
 import { ExpenseController } from "../controllers/expenseController";
 import { AuthMiddleware } from "../middlewares/authMiddleware";
 
+
 export default class ExpenseRouter {
   private router: Router;
   private expenseController: ExpenseController;
@@ -15,6 +16,7 @@ export default class ExpenseRouter {
   }
 
   private initializeRoutes(): void {
+    
     this.router.post(
       "/add",
       this.authMiddleware.authenticateToken,
@@ -49,7 +51,7 @@ export default class ExpenseRouter {
     );
   }
 
-  public async addExpense(req: Request, res: Response): Promise<void> {
+  public async addExpense(req: any, res: Response): Promise<void> {
     const newExpense = await this.expenseController.addExpense(req, res);
     res.json(newExpense);
   }

@@ -1,7 +1,6 @@
 import { Schema, model, Document } from "mongoose";
 import bcrypt from "bcrypt";
 
-
 export interface UserAttributes {
   name: string;
   role: string;
