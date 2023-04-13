@@ -36,6 +36,7 @@ class UserRouter {
   public async deleteUser(req: Request, res: Response): Promise<void> {
     console.log("@$# req", req.params.email);
     const deleteUser = await this.userController.deleteUser(req, res);
+    res.json(deleteUser);
   }
 
   public getRouter(): Router {

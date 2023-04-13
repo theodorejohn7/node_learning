@@ -1,0 +1,4 @@
+{"error":{},"level":"error","message":"Faile to add expense","service":"your-service-name","timestamp":"2023-04-12 14:12:37"}
+{"error":{},"level":"error","message":"Faile to add expense","service":"Expense Tracker","timestamp":"2023-04-12 14:15:43"}
+{"error":{},"level":"error","message":"Faile to add expense","service":"Expense Controller New","timestamp":"2023-04-13 01:04:04"}
+{"error":{},"level":"error","message":"Faile to add expense","service":"Expense Controller New","timestamp":"2023-04-13 01:07:23"}

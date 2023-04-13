@@ -1,7 +1,33 @@
 import ExpenseModel, { ExpenseDocument } from "../models/expenseModel";
-import { Model } from "mongoose";
+import mongoose, { Model, Types } from "mongoose";
+import { UserDocument } from "../models/user";
+ 
+// interface UserLinkedModal {
+//   _id: typeof Types.ObjectId;
+//   name: string;
+//   email:string;
+// }
 
-export class ExpenseDao {
+interface UserLinkedModal {
+  _id: typeof Types.ObjectId;
+  name: string;
+  email: string;
+}
+
+
+interface ExpenseData {
+  id: string;
+  userName: string;
+  description: string;
+  amount: number;
+  category: string;
+  date: Date;
+  paymentMethod: string;
+  merchant: string;
+  location: string;
+}
+
+ export class ExpenseDao {
   //   private readonly expenseModel = ExpenseModel;
   private expenseModel: Model<ExpenseDocument>;
 
@@ -38,15 +64,28 @@ export class ExpenseDao {
     }
   }
 
-  async getAllExpenses(): Promise<any[]> {
+  async getAllExpenses(): Promise<ExpenseData[]> {
     try {
-      const expenses = await ExpenseModel.find().exec();
-      return expenses.map((expense) => expense.toObject());
-    } catch (error: any) {
+      const expenses = await ExpenseModel.find()
+        .populate<UserDocument>("user", "name email")
+        .exec();
+  
+      return expenses.map((expense) => ({
+        id: expense.id,
+        userName: expense.user?.name ?? "",
+        description: expense.description,
+        amount: expense.amount,
+        category: expense.category,
+        date: expense.date,
+        paymentMethod: expense.paymentMethod,
+        merchant: expense.merchant ?? "",
+        location: expense.location ?? "",
+      }));
+    } catch (error:any) {
       throw new Error(error.message);
     }
   }
-
+   
   public async editExpense(
     id: string,
     expenseData: Partial<ExpenseDocument>
@@ -61,6 +100,19 @@ export class ExpenseDao {
     } catch (error) {
       console.error(error);
       return null;
+    }
+  }
+
+  async deleteExpense(expenseId: string): Promise<any> {
+    try {
+      const deletedExpense = await this.expenseModel.findOneAndDelete({
+        _id: expenseId,
+      });
+      if (deletedExpense) {
+        return { message: `Expense with id ${expenseId} deleted successfully` };
+      }
+    } catch (error) {
+      throw new Error("Error deleting expense");
     }
   }
 }

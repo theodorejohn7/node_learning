@@ -1,10 +1,8 @@
 import { Request, Response } from "express";
-import { userService } from "../services/userService";
-import { AuthService } from "../services/authService";
 import ExpenseService from "../services/expenseService";
 import { UserDao } from "../dao/userDao";
 import UserModel from "../models/user";
-
+import LoggerService from "../logger/logger.config";
 export interface AuthRequest extends Request {
   user: {
     id: string;
@@ -18,21 +16,28 @@ interface CustomRequest extends Request {
 export class ExpenseController {
   private readonly userDao: UserDao;
   private readonly expenseService: ExpenseService;
+  private readonly logger: LoggerService;
 
   constructor() {
     this.userDao = new UserDao(UserModel);
     this.expenseService = new ExpenseService();
+    this.logger = new LoggerService();
+    this.logger.serviceName("Expense Controller New");
   }
 
-  public async addExpense(req: CustomRequest, res: Response,  ) {
+  public async addExpense(req: CustomRequest, res: Response) {
     try {
       console.log("@$# inside ADD EXPENSE", req.userId);
       const data = req.body;
       // const userId = (req as AuthRequest).user.id;
-     const user = req.userId;
-      const newExpense = await this.expenseService.createExpense({...data, user});
+      const user = req.userId;
+      const newExpense = await this.expenseService.createExpense({
+        ...data,
+        user,
+      });
       res.status(201).json(newExpense);
     } catch (error: any) {
+      this.logger.error("Faile to add expense", error);
       res
         .status(500)
         .json({ message: `Failed to add expense  ${error.message}` });
@@ -42,9 +47,11 @@ export class ExpenseController {
   public async getAllExpenses(req: Request, res: Response) {
     try {
       const allExpenses = await this.expenseService.getAllExpenses();
+      this.logger.info("All Expense listed");
+
       res.status(201).json(allExpenses);
     } catch (error: any) {
-      res.status(500).json({ message: "Failedto get all expenses" });
+      res.status(500).json({ message: "Failedto get all expenses", error });
     }
   }
 
@@ -97,6 +104,16 @@ export class ExpenseController {
     } catch (error: any) {
       console.error(error);
       res.status(500).json({ message: "Failed to update expense" });
+    }
+  }
+
+  public async deleteExpense(req: Request, res: Response) {
+    try {
+      const id = req.params.id;
+      const deleteExpense = await this.expenseService.deleteExpense(id);
+      res.json(deleteExpense);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to delete expense" });
     }
   }
 }

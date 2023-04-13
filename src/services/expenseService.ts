@@ -67,4 +67,8 @@ export default class ExpenseService {
       throw new Error(`Failed to edit expense: ${error.message}`);
     }
   }
+
+  public async deleteExpense(id: string): Promise<any> {
+    return this.expenseDao.deleteExpense(id);
+  }
 }

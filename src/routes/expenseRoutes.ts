@@ -2,7 +2,6 @@ import express, { Router, Request, Response } from "express";
 import { ExpenseController } from "../controllers/expenseController";
 import { AuthMiddleware } from "../middlewares/authMiddleware";
 
-
 export default class ExpenseRouter {
   private router: Router;
   private expenseController: ExpenseController;
@@ -16,7 +15,6 @@ export default class ExpenseRouter {
   }
 
   private initializeRoutes(): void {
-    
     this.router.post(
       "/add",
       this.authMiddleware.authenticateToken,
@@ -28,12 +26,6 @@ export default class ExpenseRouter {
       "/list",
       this.authMiddleware.authenticateToken,
       this.listExpense.bind(this)
-    );
-
-    this.router.get(
-      "/trends",
-      this.authMiddleware.authenticateToken,
-      this.getTrends.bind(this)
     );
 
     this.router.put(
@@ -65,11 +57,6 @@ export default class ExpenseRouter {
     res.json(allExpenses);
   }
 
-  public async getTrends(req: Request, res: Response): Promise<void> {
-    // GET /trends: Retrieves spending trends for the current user
-    console.log("@$# getTrends", req.body, "params", req.params);
-  }
-
   public async editExpense(req: Request, res: Response): Promise<void> {
     // PUT /expenses/:id: Updates a specific expense by ID for any user
     // console.log("@$# editExpense", req.body, "params", req.params);
@@ -81,6 +68,8 @@ export default class ExpenseRouter {
   public async deleteExpense(req: Request, res: Response): Promise<void> {
     // DELETE /expenses/:id: Deletes a specific expense by ID for any user
     console.log("@$# deleteExpense", req.body, "params", req.params);
+    const deleteExpense = await this.expenseController.deleteExpense(req, res);
+    res.json(deleteExpense);
   }
 
   public getRouter(): Router {
