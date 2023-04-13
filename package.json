@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "clean": "rimraf ./build",
-    "build": "npm run clean && tsc",
+    "build": "npm run clean && tsc ",
     "start": "node build",
     "local": "ts-node src",
     "vercel-build": "npm run build",
