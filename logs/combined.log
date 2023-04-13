@@ -1,0 +1,17 @@
+{"error":{},"level":"error","message":"Faile to add expense","service":"your-service-name","timestamp":"2023-04-12 14:12:37"}
+{"error":{},"level":"error","message":"Faile to add expense","service":"Expense Tracker","timestamp":"2023-04-12 14:15:43"}
+{"error":{},"level":"error","message":"Faile to add expense","service":"Expense Controller New","timestamp":"2023-04-13 01:04:04"}
+{"error":{},"level":"error","message":"Faile to add expense","service":"Expense Controller New","timestamp":"2023-04-13 01:07:23"}
+{"level":"info","message":"All Expense listed","service":"Expense Controller New","timestamp":"2023-04-13 01:10:10"}
+{"level":"info","message":"All Expense listed","service":"Expense Controller New","timestamp":"2023-04-13 01:47:28"}
+{"level":"info","message":"All Expense listed","service":"Expense Controller New","timestamp":"2023-04-13 01:47:46"}
+{"level":"info","message":"All Expense listed","service":"Expense Controller New","timestamp":"2023-04-13 01:47:58"}
+{"level":"info","message":"All Expense listed","service":"Expense Controller New","timestamp":"2023-04-13 01:48:33"}
+{"level":"info","message":"All Expense listed","service":"Expense Controller New","timestamp":"2023-04-13 01:48:53"}
+{"level":"info","message":"All Expense listed","service":"Expense Controller New","timestamp":"2023-04-13 08:15:44"}
+{"level":"info","message":"All Expense listed","service":"Expense Controller New","timestamp":"2023-04-13 08:17:48"}
+{"level":"info","message":"All Expense listed","service":"Expense Controller New","timestamp":"2023-04-13 08:20:57"}
+{"level":"info","message":"All Expense listed","service":"Expense Controller New","timestamp":"2023-04-13 08:44:04"}
+{"level":"info","message":"All Expense listed","service":"Expense Controller New","timestamp":"2023-04-13 08:44:52"}
+{"level":"info","message":"All Expense listed","service":"Expense Controller New","timestamp":"2023-04-13 08:46:16"}
+{"level":"info","message":"All Expense listed","service":"Expense Controller New","timestamp":"2023-04-13 08:57:24"}

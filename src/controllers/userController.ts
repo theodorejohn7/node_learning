@@ -1,38 +1,37 @@
-import { Request, Response } from "express"; 
+import { Request, Response } from "express";
 import { userService } from "../services/userService";
 import { AuthService } from "../services/authService";
-import { userDao } from "../dao/userDao";
-import { UserDocument } from "../models/user";
-
-
-
-
+import { UserDao } from "../dao/userDao";
+import UserModel from "../models/user";
+import Joi from "joi";
 
 export class UserController {
- 
-    constructor() {
-      // this.userDao = new UserDao();
+  private readonly userDao: UserDao;
+  private readonly authService: AuthService;
 
-      // this.userService = new UserService();
-    }
-  
-    async login(req: Request, res: Response): Promise<void> {
-      const { email, password } = req.body;
-      const user:UserDocument |null  = await userDao.findUserByEmailAndPassword(email, password);
-      if (user) {
-        // const token = AuthService.generateToken({ userId: user._id });
-        const token = AuthService.generateToken({ userId: user.email });
-
-        res.json({ token });
-      } else {
-        res.status(401).json({ message: 'Invalid email or password' });
-      }
-    }
+  constructor() {
+    this.userDao = new UserDao(UserModel);
+    this.authService = new AuthService();
+  }
 
   public async createUser(req: Request, res: Response) {
-    const user = req.body;
+    const userSchema = Joi.object({
+      name: Joi.string().required(),
+      email: Joi.string().email().required(),
+      password: Joi.string().required(),
+      securityQuestion: Joi.required(),
+      securityAnswer: Joi.required(),
+    });
+
+    const { error, value } = userSchema.validate(req.body);
+
+    if (error) {
+      return res.status(400).json({ message: error.details[0].message });
+    }
+    // const user = req.body;
+
     try {
-      const createdUser = await userService.createUser(user);
+      const createdUser = await userService.createUser(value);
       res.status(201).json(createdUser);
     } catch (error) {
       console.error(error);
@@ -49,5 +48,24 @@ export class UserController {
       res.status(500).json({ message: "Failed to get users" });
     }
   }
+
+  public async resetPassword(req: Request, res: Response) {
+    try {
+      const userDetails = req.body;
+      const resetDetails = await userService.resetPassword(userDetails);
+      res.status(201).json(resetDetails);
+    } catch (error: any) {
+      res.status(500).json({ message: error.message });
+    }
+  }
+
+  public async deleteUser(req: Request, res: Response) {
+    try {
+      const email = req.params.email;
+      const deleteUser = await userService.deleteUser(email);
+      res.json(deleteUser);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to delete user " });
+    }
+  }
 }
- 
