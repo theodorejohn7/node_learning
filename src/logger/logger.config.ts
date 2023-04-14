@@ -6,11 +6,11 @@ export default class LoggerService {
   private logger: Logger;
 
   constructor() {
-    const logDir = 'logs';
+    // const logDir = 'logs';
 
-    if (!fs.existsSync(logDir)) {
-      fs.mkdirSync(logDir,{recursive:true});
-    }
+    // if (!fs.existsSync(logDir)) {
+    //   fs.mkdirSync(logDir,{recursive:true});
+    // }
     
 
     this.logger = createLogger({
@@ -25,12 +25,19 @@ export default class LoggerService {
       ),
       defaultMeta: { service: "Expense Tracker" },
       transports: [
+        // new transports.File({
+        //   filename: "logs/error.log",
+        //   level: "error",
+        // }),
+        // new transports.File({
+        //   filename: "logs/combined.log",
+        // }),
         new transports.File({
-          filename: "logs/error.log",
+          filename: "error.log",
           level: "error",
         }),
         new transports.File({
-          filename: "logs/combined.log",
+          filename: "combined.log",
         }),
       ],
     });
