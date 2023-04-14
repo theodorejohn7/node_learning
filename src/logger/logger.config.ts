@@ -1,9 +1,18 @@
 import { createLogger, format, transports, Logger } from "winston";
+import fs from 'fs';
+
 
 export default class LoggerService {
   private logger: Logger;
 
   constructor() {
+    const logDir = 'logs';
+
+    if (!fs.existsSync(logDir)) {
+      fs.mkdirSync(logDir,{recursive:true});
+    }
+    
+
     this.logger = createLogger({
       level: "info",
       format: format.combine(
