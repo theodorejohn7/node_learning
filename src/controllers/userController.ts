@@ -21,6 +21,8 @@ export class UserController {
       password: Joi.string().required(),
       securityQuestion: Joi.required(),
       securityAnswer: Joi.required(),
+      role: Joi.required(),
+
     });
 
     const { error, value } = userSchema.validate(req.body);
